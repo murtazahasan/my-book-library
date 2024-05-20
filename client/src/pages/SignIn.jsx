@@ -1,23 +1,25 @@
-// src/pages/SignUp.jsx
+// src/pages/SignIn.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../redux/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSignUp = async () => {
+  const handleSignIn = async () => {
     try {
-      await axios.post('http://localhost:4000/user/signup', {
+      const response = await axios.post('http://localhost:4000/user/login', {
         email,
         password,
-        username,
       });
-      navigate('/signin');
+      dispatch(signIn({ email }));
+      navigate('/');
     } catch (err) {
       setError(err.response.data.message);
     }
@@ -25,14 +27,7 @@ const SignUp = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl mb-4">Sign Up</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
+      <h2 className="text-2xl mb-4">Sign In</h2>
       <input
         type="email"
         placeholder="Email"
@@ -48,17 +43,17 @@ const SignUp = () => {
         className="border p-2 mb-4 w-full"
       />
       <button
-        onClick={handleSignUp}
+        onClick={handleSignIn}
         className="bg-blue-500 text-white px-4 py-2 rounded"
       >
-        Sign Up
+        Sign In
       </button>
       {error && <p className="text-red-500 mt-4">{error}</p>}
       <p className="mt-4">
-        Already have an account? <Link to="/signin" className="text-blue-500">Sign In</Link>
+        Don't have an account? <Link to="/signup" className="text-blue-500">Sign Up</Link>
       </p>
     </div>
   );
 };
 
-export default SignUp;
+export default SignIn;
