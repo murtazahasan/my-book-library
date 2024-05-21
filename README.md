@@ -1,2 +1,1 @@
-# Code Soni YT
-In this repo, you'll find the code related to the videos uploaded on CodeSoni YouTube Channel
+# A MERN stack website with authentication and CRUD functionality.
