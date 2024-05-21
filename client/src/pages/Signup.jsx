@@ -1,25 +1,31 @@
 // src/pages/SignUp.jsx
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSignUp = async () => {
     try {
-      await axios.post('http://localhost:4000/user/signup', {
+      await axios.post("http://localhost:4000/user/signup", {
         email,
         password,
         username,
       });
-      navigate('/signin');
+      enqueueSnackbar("Sign up successful! Please sign in.", {
+        variant: "success",
+      });
+      navigate("/signin");
     } catch (err) {
-      setError(err.response.data.message);
+      enqueueSnackbar(err.response.data.message || "Sign up failed", {
+        variant: "error",
+      });
     }
   };
 
@@ -53,9 +59,11 @@ const SignUp = () => {
       >
         Sign Up
       </button>
-      {error && <p className="text-red-500 mt-4">{error}</p>}
       <p className="mt-4">
-        Already have an account? <Link to="/signin" className="text-blue-500">Sign In</Link>
+        Already have an account?{" "}
+        <Link to="/signin" className="text-blue-500">
+          Sign In
+        </Link>
       </p>
     </div>
   );

@@ -1,27 +1,31 @@
 // src/pages/SignIn.jsx
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { signIn } from '../redux/authSlice';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { signIn } from "../redux/authSlice";
+import { useNavigate, Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSignIn = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/user/login', {
+      const response = await axios.post("http://localhost:4000/user/login", {
         email,
         password,
       });
       dispatch(signIn({ email }));
-      navigate('/');
+      enqueueSnackbar("Sign in successful!", { variant: "success" });
+      navigate("/");
     } catch (err) {
-      setError(err.response.data.message);
+      enqueueSnackbar(err.response.data.message || "Sign in failed", {
+        variant: "error",
+      });
     }
   };
 
@@ -48,9 +52,11 @@ const SignIn = () => {
       >
         Sign In
       </button>
-      {error && <p className="text-red-500 mt-4">{error}</p>}
       <p className="mt-4">
-        Don't have an account? <Link to="/signup" className="text-blue-500">Sign Up</Link>
+        Don't have an account?{" "}
+        <Link to="/signup" className="text-blue-500">
+          Sign Up
+        </Link>
       </p>
     </div>
   );
