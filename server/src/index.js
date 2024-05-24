@@ -1,6 +1,7 @@
 const express = require("express");
 const UserAuthRouter = require("./routes/UserAuthRouter");
 const booksRoute = require("./routes/booksRoute");
+const uploadRoutes = require('./routes/upload.routes');
 const dbConnect = require("./lib/dbConnect");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -17,6 +18,7 @@ dbConnect();
 // Routes
 app.use("/user", UserAuthRouter);
 app.use("/books", booksRoute);
+app.use("/api", uploadRoutes);
 
 app.listen(4000, () => {
   console.log("Server is running on http://localhost:4000");
